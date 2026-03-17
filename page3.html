@@ -171,6 +171,50 @@
   function goToGift() {
     window.location.href = "page4.html";
   }
+
+  // 🎵 MUSIC LOGIC FOR ALL 5 PAGES
+  const audio = new Audio('your-song.mp3'); 
+  audio.loop = true;
+
+  // Check if music was playing on the last page
+  window.addEventListener('load', () => {
+    const musicTimestamp = localStorage.getItem('musicTime');
+    const wasPlaying = localStorage.getItem('musicPlaying');
+
+    if (musicTimestamp) {
+      audio.currentTime = parseFloat(musicTimestamp);
+    }
+
+    // Start music on first click (Browser requirement)
+    document.addEventListener('click', () => {
+      if (localStorage.getItem('musicPlaying') === 'true' && audio.paused) {
+        audio.play();
+        document.getElementById('music-btn').innerText = "🎵";
+      }
+    }, { once: true });
+  });
+
+  // Save progress every second
+  setInterval(() => {
+    if (!audio.paused) {
+      localStorage.setItem('musicTime', audio.currentTime);
+      localStorage.setItem('musicPlaying', 'true');
+    }
+  }, 1000);
+
+  function toggleMusic() {
+    const btn = document.getElementById('music-btn');
+    if (audio.paused) {
+      audio.play();
+      localStorage.setItem('musicPlaying', 'true');
+      btn.innerText = "🎵";
+    } else {
+      audio.pause();
+      localStorage.setItem('musicPlaying', 'false');
+      btn.innerText = "🔇";
+    }
+  }
+
 </script>
 
 </body>
