@@ -83,6 +83,9 @@ canvas {
 
 <body>
 
+<audio id="heartbeat" src="heartbeat.mp3" loop></audio>
+<audio id="bgm" src="music.mp3" loop></audio>
+
 <canvas id="canvas"></canvas>
 
 <div class="container">
@@ -189,13 +192,37 @@ function showText(x,y){
   setTimeout(()=>el.remove(),2000);
 }
 
-/* 💖 CLICK ANYWHERE */
-window.addEventListener("click",(e)=>{
-  for(let i=0;i<5;i++){
-    emojis.push(new Emoji(e.clientX,e.clientY));
+/* 💖 CLICK ANYWHERE + MUSIC */
+let container = document.querySelector(".container");
+
+window.addEventListener("click", (e) => {
+
+  // 1️⃣ Play heartbeat
+  heartbeat.volume = 0.7;
+  heartbeat.play().catch(err => console.log("Heartbeat blocked", err));
+
+  // 2️⃣ Play background music (fade in)
+  if (bgm) {
+    bgm.volume = 0;
+    bgm.play().catch(err => console.log("BGM blocked", err));
+    let fade = setInterval(() => {
+      if (bgm.volume < 0.5) bgm.volume += 0.01;
+      else clearInterval(fade);
+    }, 100);
   }
-  showText(e.clientX,e.clientY);
-});
+
+  // 3️⃣ Show emojis
+  for (let i = 0; i < 5; i++) emojis.push(new Emoji(e.clientX, e.clientY));
+
+  // 4️⃣ Show floating text
+  showText(e.clientX, e.clientY);
+
+  // 5️⃣ Pulse container for heartbeat effect
+  container.style.transform = "scale(1.05)";
+  setTimeout(() => container.style.transform = "scale(1)", 150);
+
+  // Remove this listener after first click
+}, { once: true });
 
 /* 😏 BUTTON DODGE */
 let btn=document.getElementById("btn");
@@ -227,6 +254,8 @@ for(let i=0;i<10;i++){
   b.style.animationDuration=(Math.random()*3+4)+"s";
   document.body.appendChild(b);
 }
+
+
 </script>
 
 </body>
