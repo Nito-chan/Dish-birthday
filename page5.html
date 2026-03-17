@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Core.Vani_Unlocked ✨</title>
+<style>
+  body, html {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    background-color: #050505;
+    font-family: 'Georgia', serif;
+    overflow: hidden;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  canvas {
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 1;
+  }
+
+  #message-container {
+    position: relative;
+    z-index: 10;
+    max-width: 600px;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2px; /* Sharp, modern tech look */
+    text-align: center;
+    box-shadow: 0 0 50px rgba(255, 75, 110, 0.2);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 2s ease-out;
+  }
+
+  h2 {
+    color: #ff4b6e;
+    letter-spacing: 5px;
+    font-size: 1rem;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+  }
+
+  p {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: #fce4ec;
+    margin-bottom: 30px;
+  }
+
+  .signature {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.1rem;
+    color: #ffd700;
+    letter-spacing: 2px;
+  }
+
+  /* ⚡ The "Boot" Loading Screen */
+  #loader {
+    position: fixed;
+    z-index: 100;
+    background: #000;
+    width: 100%; height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .scanline {
+    width: 200px;
+    height: 2px;
+    background: #ff4b6e;
+    box-shadow: 0 0 10px #ff4b6e;
+    animation: scan 1.5s infinite;
+  }
+
+  @keyframes scan {
+    0% { transform: translateY(-10px); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(10px); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="scanline"></div>
+  <p style="margin-top: 20px; font-family: monospace; letter-spacing: 3px;">INITIALIZING_MEMORIES...</p>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<div id="message-container">
+  <h2>SYSTEM_STABLE // HEART_FULL</h2>
+  <p id="typewriter">
+    Vani, I just wanted to take a moment to thank you properly. <br><br>
+    Thank you for being with me and for being such an incredible friend. I don’t say it enough, but I’m absolutely blessed to have you in my life. <br><br>
+    You aren't just a friend; you're the person who makes everything better just by being there. You're awesome, you're special, and you truly mean everything to me.
+  </p>
+  <div class="signature">— Nitō 👓</div>
+</div>
+
+<script>
+  // 🌌 Cinematic Starfield Logic
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let stars = [];
+  class Star {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 2;
+      this.speed = Math.random() * 0.5;
+      this.alpha = Math.random();
+    }
+    draw() {
+      ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    update() {
+      this.y -= this.speed;
+      if (this.y < 0) this.y = canvas.height;
+    }
+  }
+
+  for (let i = 0; i < 200; i++) stars.push(new Star());
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => { s.update(); s.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  // 🚀 The Reveal Sequence
+  window.onload = () => {
+    setTimeout(() => {
+      document.getElementById('loader').style.opacity = '0';
+      setTimeout(() => {
+        document.getElementById('loader').style.display = 'none';
+        const container = document.getElementById('message-container');
+        container.style.opacity = '1';
+        container.style.transform = 'translateY(0)';
+      }, 1000);
+    }, 2500);
+  };
+</script>
+
+</body>
+</html>

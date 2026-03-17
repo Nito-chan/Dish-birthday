@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Gallery of You 💖</title>
+<style>
+  body {
+    margin: 0;
+    background: #fff0f3;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden;
+  }
+
+  .header {
+    text-align: center;
+    padding: 50px 20px;
+    background: white;
+  }
+
+  h1 { color: #ff4b6e; font-size: 2.5rem; margin-bottom: 10px; }
+
+  /* 🖼️ Photo Gallery */
+  .gallery {
+    column-count: 3;
+    column-gap: 15px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  @media (max-width: 800px) { .gallery { column-count: 2; } }
+  @media (max-width: 500px) { .gallery { column-count: 1; } }
+
+  .photo-card {
+    background: white;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    break-inside: avoid;
+    transition: transform 0.3s;
+  }
+  .photo-card:hover { transform: scale(1.03); }
+  .photo-card img {
+    width: 100%;
+    border-radius: 5px;
+    display: block;
+  }
+
+  /* ✨ Floating Compliments */
+  .compliment {
+    position: fixed;
+    color: #ff85a2;
+    font-weight: bold;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 100;
+    font-size: 1.2rem;
+    animation: floatHorizontal linear forwards;
+  }
+  @keyframes floatHorizontal {
+    from { left: -20%; opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.8; }
+    to { left: 110%; opacity: 0; }
+  }
+
+  .next-btn-container {
+    text-align: center;
+    padding: 60px 0;
+  }
+  .next-btn {
+    background: #ff4b6e;
+    color: white;
+    padding: 20px 40px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(255, 75, 110, 0.3);
+    transition: 0.3s;
+  }
+  .next-btn:hover { background: #e6395b; transform: translateY(-5px); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>The Vani Archive ✨</h1>
+  <p>Just a few reasons why you're the best person ever.</p>
+</div>
+
+<div class="gallery">
+  <div class="photo-card">
+    <img src="photo1.jpg" alt="Memory 1">
+    <p style="text-align:center; color:#888;">The time we laughed at the monkey photo 🙊</p>
+  </div>
+  <div class="photo-card"><img src="photo2.jpg" alt="Memory 2"></div>
+  <div class="photo-card"><img src="photo3.jpg" alt="Memory 3"></div>
+  <div class="photo-card"><img src="photo4.jpg" alt="Memory 4"></div>
+  <div class="photo-card"><img src="photo5.jpg" alt="Memory 5"></div>
+</div>
+
+<div class="next-btn-container">
+  <button class="next-btn" onclick="window.location.href='page5.html'">Click here again Dish 💖</button>
+</div>
+
+<script>
+  const compliments = [
+    "Absolutely stunning 😤", "Smartest person I know", "Literal Sunshine ✨",
+    "World's funniest person", "Unmatched vibe", "Too adorable 🥺",
+    "My favorite human", "Blessed to know you", "Incredible energy",
+    "Always making me smile", "You're just awesome", "One in a billion"
+  ];
+
+  function spawnCompliment() {
+    const el = document.createElement('div');
+    el.className = 'compliment';
+    el.innerText = compliments[Math.floor(Math.random() * compliments.length)];
+    el.style.top = Math.random() * 80 + 10 + 'vh';
+    el.style.animationDuration = Math.random() * 5 + 5 + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 10000);
+  }
+  setInterval(spawnCompliment, 800);
+</script>
+</body>
+</html>

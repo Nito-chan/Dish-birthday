@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday Dish 🎉</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #ff9a9e, #ffdde1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial;
+  overflow: hidden;
+}
+
+/* CENTER */
+.container {
+  text-align: center;
+  color: white;
+  z-index: 2;
+}
+
+h1 {
+  font-size: 55px;
+  text-shadow: 0 0 20px rgba(255,255,255,0.8);
+}
+
+p {
+  font-size: 20px;
+}
+
+/* BUTTON */
+button {
+  padding: 14px 28px;
+  font-size: 18px;
+  border-radius: 30px;
+  border: none;
+  background: white;
+  color: #ff4b6e;
+  cursor: pointer;
+  margin-top: 25px;
+  transition: 0.2s;
+  position: relative;
+}
+
+/* FLOATING TEXT */
+.floatingText {
+  position: absolute;
+  color: white;
+  font-size: 18px;
+  pointer-events: none;
+  animation: floatUp 2s forwards;
+}
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-80px);
+    opacity: 0;
+  }
+}
+
+/* BALLOONS */
+.balloon {
+  position: absolute;
+  font-size: 30px;
+  animation: float 6s linear infinite;
+}
+
+@keyframes float {
+  from { transform: translateY(100vh); }
+  to { transform: translateY(-100vh); }
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div class="container">
+  <h1>Happy Birthday Dish 🎉</h1>
+  <p>You’re illegally cute btw 😤💖</p>
+  <button id="btn">Catch me if you can 😏</button>
+</div>
+
+<script>
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
+
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+let confetti = [];
+let emojis = [];
+
+/* COLORS */
+let colors = ["#ff4b6e","#ff85a2","#ffd1dc","#fff"];
+
+/* CONFETTI */
+class Confetti {
+  constructor(x,y){
+    this.x=x||Math.random()*canvas.width;
+    this.y=y||-10;
+    this.size=Math.random()*6+4;
+    this.color=colors[Math.floor(Math.random()*colors.length)];
+    this.dy=Math.random()*4+2;
+    this.dx=Math.random()*2-1;
+  }
+  update(){
+    this.y+=this.dy;
+    this.x+=this.dx;
+  }
+  draw(){
+    ctx.fillStyle=this.color;
+    ctx.fillRect(this.x,this.y,this.size,this.size);
+  }
+}
+
+/* EMOJI BURST */
+class Emoji {
+  constructor(x,y){
+    this.x=x;
+    this.y=y;
+    this.dy=Math.random()*-3-1;
+    this.alpha=1;
+    this.emoji=["💖","✨","🥺","🎉","💫"][Math.floor(Math.random()*5)];
+  }
+  update(){
+    this.y+=this.dy;
+    this.alpha-=0.02;
+  }
+  draw(){
+    ctx.globalAlpha=this.alpha;
+    ctx.font="20px Arial";
+    ctx.fillText(this.emoji,this.x,this.y);
+    ctx.globalAlpha=1;
+  }
+}
+
+/* LOOP */
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  if(confetti.length<120){
+    confetti.push(new Confetti());
+  }
+
+  confetti.forEach((c,i)=>{
+    c.update();
+    c.draw();
+    if(c.y>canvas.height) confetti.splice(i,1);
+  });
+
+  emojis.forEach((e,i)=>{
+    e.update();
+    e.draw();
+    if(e.alpha<=0) emojis.splice(i,1);
+  });
+
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* 😂 RANDOM COMPLIMENTS */
+let compliments = [
+  "Cutie 😤",
+  "Stop being this pretty 😭",
+  "Main character energy ✨",
+  "Too adorable 🥺",
+  "Illegal level cute 💖"
+];
+
+function showText(x,y){
+  let el=document.createElement("div");
+  el.className="floatingText";
+  el.innerText=compliments[Math.floor(Math.random()*compliments.length)];
+  el.style.left=x+"px";
+  el.style.top=y+"px";
+  document.body.appendChild(el);
+
+  setTimeout(()=>el.remove(),2000);
+}
+
+/* 💖 CLICK ANYWHERE */
+window.addEventListener("click",(e)=>{
+  for(let i=0;i<5;i++){
+    emojis.push(new Emoji(e.clientX,e.clientY));
+  }
+  showText(e.clientX,e.clientY);
+});
+
+/* 😏 BUTTON DODGE */
+let btn=document.getElementById("btn");
+
+btn.addEventListener("mouseover",()=>{
+  let x=Math.random()*(window.innerWidth-200);
+  let y=Math.random()*(window.innerHeight-100);
+  btn.style.position="absolute";
+  btn.style.left=x+"px";
+  btn.style.top=y+"px";
+});
+
+/* 🎯 CLICK BUTTON (when she finally catches it) */
+btn.addEventListener("click",(e)=>{
+  for(let i=0;i<100;i++){
+    confetti.push(new Confetti(e.clientX,e.clientY));
+  }
+  setTimeout(()=>{
+    window.location.href="page2.html";
+  },600);
+});
+
+/* 🎈 BALLOONS */
+for(let i=0;i<10;i++){
+  let b=document.createElement("div");
+  b.className="balloon";
+  b.innerText="🎈";
+  b.style.left=Math.random()*100+"vw";
+  b.style.animationDuration=(Math.random()*3+4)+"s";
+  document.body.appendChild(b);
+}
+</script>
+
+</body>
+</html>
