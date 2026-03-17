@@ -83,9 +83,6 @@ canvas {
 
 <body>
 
-<audio id="heartbeat" src="heartbeat.mp3" loop></audio>
-<audio id="bgm" src="music.mp3" loop></audio>
-
 <canvas id="canvas"></canvas>
 
 <div class="container">
@@ -94,10 +91,14 @@ canvas {
   <button id="btn">Catch me if you can 😏</button>
 </div>
 
+<audio autoplay loop>
+  <source src="audio/song.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
 <script>
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
-
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
@@ -117,29 +118,19 @@ class Confetti {
     this.dy=Math.random()*4+2;
     this.dx=Math.random()*2-1;
   }
-  update(){
-    this.y+=this.dy;
-    this.x+=this.dx;
-  }
-  draw(){
-    ctx.fillStyle=this.color;
-    ctx.fillRect(this.x,this.y,this.size,this.size);
-  }
+  update(){ this.y+=this.dy; this.x+=this.dx; }
+  draw(){ ctx.fillStyle=this.color; ctx.fillRect(this.x,this.y,this.size,this.size); }
 }
 
 /* EMOJI BURST */
 class Emoji {
   constructor(x,y){
-    this.x=x;
-    this.y=y;
+    this.x=x; this.y=y;
     this.dy=Math.random()*-3-1;
     this.alpha=1;
     this.emoji=["💖","✨","🥺","🎉","💫"][Math.floor(Math.random()*5)];
   }
-  update(){
-    this.y+=this.dy;
-    this.alpha-=0.02;
-  }
+  update(){ this.y+=this.dy; this.alpha-=0.02; }
   draw(){
     ctx.globalAlpha=this.alpha;
     ctx.font="20px Arial";
@@ -148,36 +139,20 @@ class Emoji {
   }
 }
 
-/* LOOP */
+/* ANIMATION LOOP */
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  if(confetti.length<120){
-    confetti.push(new Confetti());
-  }
-
-  confetti.forEach((c,i)=>{
-    c.update();
-    c.draw();
-    if(c.y>canvas.height) confetti.splice(i,1);
-  });
-
-  emojis.forEach((e,i)=>{
-    e.update();
-    e.draw();
-    if(e.alpha<=0) emojis.splice(i,1);
-  });
-
+  if(confetti.length<120) confetti.push(new Confetti());
+  confetti.forEach((c,i)=>{ c.update(); c.draw(); if(c.y>canvas.height) confetti.splice(i,1); });
+  emojis.forEach((e,i)=>{ e.update(); e.draw(); if(e.alpha<=0) emojis.splice(i,1); });
   requestAnimationFrame(animate);
 }
 animate();
 
-/* 😂 RANDOM COMPLIMENTS */
+/* RANDOM COMPLIMENTS */
 let compliments = [
-  "Cutie 😤",
-  "Stop being this pretty 😭",
-  "Main character energy ✨",
-  "Too adorable 🥺",
+  "Cutie 😤", "Stop being this pretty 😭", 
+  "Main character energy ✨", "Too adorable 🥺", 
   "Illegal level cute 💖"
 ];
 
@@ -188,64 +163,32 @@ function showText(x,y){
   el.style.left=x+"px";
   el.style.top=y+"px";
   document.body.appendChild(el);
-
   setTimeout(()=>el.remove(),2000);
 }
 
-/* 💖 CLICK ANYWHERE + MUSIC */
-let container = document.querySelector(".container");
-
+/* CLICK ANYWHERE → EMOJIS + FLOATING TEXT */
 window.addEventListener("click", (e) => {
+  for(let i=0;i<5;i++) emojis.push(new Emoji(e.clientX,e.clientY));
+  showText(e.clientX,e.clientY);
+});
 
-  // 1️⃣ Play heartbeat
-  heartbeat.volume = 0.7;
-  heartbeat.play().catch(err => console.log("Heartbeat blocked", err));
-
-  // 2️⃣ Play background music (fade in)
-  if (bgm) {
-    bgm.volume = 0;
-    bgm.play().catch(err => console.log("BGM blocked", err));
-    let fade = setInterval(() => {
-      if (bgm.volume < 0.5) bgm.volume += 0.01;
-      else clearInterval(fade);
-    }, 100);
-  }
-
-  // 3️⃣ Show emojis
-  for (let i = 0; i < 5; i++) emojis.push(new Emoji(e.clientX, e.clientY));
-
-  // 4️⃣ Show floating text
-  showText(e.clientX, e.clientY);
-
-  // 5️⃣ Pulse container for heartbeat effect
-  container.style.transform = "scale(1.05)";
-  setTimeout(() => container.style.transform = "scale(1)", 150);
-
-  // Remove this listener after first click
-}, { once: true });
-
-/* 😏 BUTTON DODGE */
-let btn=document.getElementById("btn");
-
-btn.addEventListener("mouseover",()=>{
-  let x=Math.random()*(window.innerWidth-200);
-  let y=Math.random()*(window.innerHeight-100);
+/* BUTTON DODGE */
+let btn = document.getElementById("btn");
+btn.addEventListener("mouseover", () => {
+  let x = Math.random()*(window.innerWidth-200);
+  let y = Math.random()*(window.innerHeight-100);
   btn.style.position="absolute";
   btn.style.left=x+"px";
   btn.style.top=y+"px";
 });
 
-/* 🎯 CLICK BUTTON (when she finally catches it) */
-btn.addEventListener("click",(e)=>{
-  for(let i=0;i<100;i++){
-    confetti.push(new Confetti(e.clientX,e.clientY));
-  }
-  setTimeout(()=>{
-    window.location.href="page2.html";
-  },600);
+/* BUTTON CLICK → NEXT PAGE + CONFETTI */
+btn.addEventListener("click", (e) => {
+  for(let i=0;i<100;i++) confetti.push(new Confetti(e.clientX,e.clientY));
+  setTimeout(()=>{ window.location.href="page2.html"; },600);
 });
 
-/* 🎈 BALLOONS */
+/* BALLOONS */
 for(let i=0;i<10;i++){
   let b=document.createElement("div");
   b.className="balloon";
@@ -254,8 +197,6 @@ for(let i=0;i<10;i++){
   b.style.animationDuration=(Math.random()*3+4)+"s";
   document.body.appendChild(b);
 }
-
-
 </script>
 
 </body>

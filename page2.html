@@ -45,14 +45,17 @@ canvas {
 
 <body>
 
-<audio id="heartbeat" src="heartbeat.mp3"></audio>
-<audio id="bgm" src="music.mp3" loop></audio>
 
 <canvas id="canvas"></canvas>
 
 <div class="text-container">
   <div class="text" id="text">Happy Birthday Disha 💖</div>
 </div>
+
+<audio autoplay loop>
+  <source src="audio/song.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
 
 <script>
 let canvas = document.getElementById("canvas");
@@ -66,28 +69,7 @@ let particles = [];
 let sparkles = [];
 let slowMotion = 1;
 
-// 🎵 HEARTBEAT + MUSIC
-let bgm = document.getElementById("bgm");
-let heartbeat = document.getElementById("heartbeat");
 
-window.addEventListener("click", () => {
-
-  // play heartbeat first
-  heartbeat.volume = 1;
-  heartbeat.play();
-
-  // after 4 seconds start main music
-  setTimeout(() => {
-    bgm.volume = 0;
-    bgm.play();
-
-    let fade = setInterval(() => {
-      if (bgm.volume < 0.5) bgm.volume += 0.01;
-      else clearInterval(fade);
-    }, 100);
-  }, 4000);
-
-}, { once: true });
 
 // 🌈 Cute colors
 function getCuteColor() {
